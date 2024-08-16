@@ -1,11 +1,6 @@
 'use client';
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useRef,
-  useEffect,
-} from 'react';
+
+import { useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -86,12 +81,12 @@ const getFilteredInvites = (
   return [];
 };
 
-const CardThumbnail: React.FC<ICardThumbnailProps> = ({
+function CardThumbnail({
   cardData,
   allInvites,
   isOwned,
   inSettings,
-}) => {
+}: ICardThumbnailProps) {
   const router = useRouter();
   const filteredInvites = allInvites
     ? getFilteredInvites(allInvites, cardData)
@@ -131,82 +126,86 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
     }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const cardID = cardData.card_id;
     if (formData.get('email') && cardID) {
-      invitationAction(cardID, formData)
-        .then((response) => {
-          if (
-            response.message ===
+      try {
+        const response = await invitationAction(cardID, formData);
+
+        if (
+          response.message &&
+          response.message ===
             'WARNING: Invite to the same guest is already pending. No changes made.'
-          ) {
-            setDupeInvite({
-              isDupe: true,
-              email: invitation.email,
-            });
-            setInvitation({ name: '', email: '' });
+        ) {
+          setDupeInvite({
+            isDupe: true,
+            email: invitation.email,
+          });
+          setInvitation({ name: '', email: '' });
 
-            // Delay the toggle by 5 seconds
-            return new Promise<void>((resolve) => {
-              setTimeout(() => {
-                setDupeInvite({
-                  isDupe: false,
-                  email: '',
-                });
-                resolve();
-              }, 5000);
-            });
-          } else {
-            setEmailSubmitted(true);
-            setInvitation({ name: '', email: '' });
+          // Delay the toggle by 5 seconds
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              setDupeInvite({
+                isDupe: false,
+                email: '',
+              });
+              resolve();
+            }, 5000);
+          });
+        } else {
+          setEmailSubmitted(true);
+          setInvitation({ name: '', email: '' });
 
-            // Delay the toggle by 2 seconds
-            return new Promise<void>((resolve) => {
-              setTimeout(() => {
-                setIsToggle(false);
-                setEmailSubmitted(false);
-                resolve();
-              }, 3000);
-            });
-          }
-        })
-        .catch((error) => console.error('Failed to send invitation', error));
+          // Delay the toggle by 2 seconds
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              setIsToggle(false);
+              setEmailSubmitted(false);
+              resolve();
+            }, 3000);
+          });
+        }
+      } catch (error) {
+        console.error('Failed to send invitation', error);
+      }
     } else {
       console.warn('invalid email');
     }
-  };
+  }
 
-  const triggerRevoke = (
+  async function triggerRevoke(
     inviteId: string | null,
     card_name?: string | null,
-  ) => {
-    inviteRevokeAction(inviteId, card_name)
-      .then(() => {
-        setRevokeSubmittedId(inviteId);
-        setTimeout(() => {
-          setRevokeSubmittedId(null);
-        }, 3000);
-      })
-      .catch((error) => console.error('Failed to revoke invitation', error));
-  };
+  ) {
+    try {
+      await inviteRevokeAction(inviteId, card_name);
+      setRevokeSubmittedId(inviteId);
+      setTimeout(() => {
+        setRevokeSubmittedId(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to revoke invitation', error);
+    }
+  }
 
-  const triggerDecline = (
+  async function triggerDecline(
     inviteId: string | null,
     owner_email?: string | null,
     card_name?: string | null,
-  ) => {
-    inviteDeclineAction(inviteId, owner_email, card_name)
-      .then(() => {
-        setDeclinedInviteId(inviteId);
-        setTimeout(() => {
-          setRevokeSubmittedId(null);
-        }, 3000);
-        // triggerReRender();
-      })
-      .catch((error) => console.error('Failed to decline invitation', error));
-  };
+  ) {
+    try {
+      await inviteDeclineAction(inviteId, owner_email, card_name);
+      setDeclinedInviteId(inviteId);
+      setTimeout(() => {
+        setRevokeSubmittedId(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to decline invitation', error);
+    }
+  }
 
   //////////////////////////////////////////////
   const formRef = useRef<HTMLDivElement>(null); // Track the form element
@@ -233,8 +232,8 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                 <Image
                   src={card_image_url as string}
                   alt="Card Thumbnail"
-                  layout="fill"
-                  objectFit="contain"
+                  fill={true}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
               <div className="flex mt-2 flex-col flex-shrink">
@@ -291,7 +290,7 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                           </p>
                         </div>
                         {invite.invite_status !== 'revoked' && (
-                          <div
+                          <button
                             className="flex items-center cursor-pointer justify-end"
                             onClick={() => {
                               triggerRevoke(invite.invite_id, cardData.name);
@@ -302,7 +301,7 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                               className="text-chartRed text-md md:text-2xl"
                               icon={faXmark}
                             />
-                          </div>
+                          </button>
                         )}
                       </div>
                       {revokeSubmittedId === invite.invite_id && (
@@ -374,7 +373,7 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                         {!emailSubmitted && (
                           <form
                             className="w-full flex flex-col gap-3 items-end"
-                            onSubmit={handleSubmit}
+                            onSubmit={(e) => handleSubmit(e)}
                           >
                             <input
                               type="text"
@@ -432,15 +431,15 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                   <Image
                     src={card_image_url}
                     alt="Card Thumbnail"
-                    layout="fill"
-                    objectFit="contain"
+                    fill={true}
+                    style={{ objectFit: 'contain' }}
                   />
                 ) : (
                   <Image
                     src={card_image_url as string}
                     alt="Default Card Thumbnail"
-                    layout="fill"
-                    objectFit="contain"
+                    fill={true}
+                    style={{ objectFit: 'contain' }}
                   />
                 )}
               </div>
@@ -454,8 +453,8 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                     <Image
                       src={club_logo as string}
                       alt="club crest"
-                      layout="fill"
-                      objectFit="contain"
+                      fill={true}
+                      style={{ objectFit: 'contain' }}
                     />
                   </div>
                   <div className="gap-1 flex flex-col text-sm">
@@ -582,8 +581,8 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
               <Image
                 src={card_image_url as string}
                 alt="Card Thumbnail"
-                layout="fill"
-                objectFit="contain"
+                fill={true}
+                style={{ objectFit: 'contain' }}
               />
             </div>
             <div className="flex mt-2 flex-col flex-shrink">
@@ -676,15 +675,15 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
                 <Image
                   src={card_image_url}
                   alt="Card Thumbnail"
-                  layout="fill"
-                  objectFit="contain"
+                  fill={true}
+                  style={{ objectFit: 'contain' }}
                 />
               ) : (
                 <Image
                   src={card_image_url as string}
                   alt="Default Card Thumbnail"
-                  layout="fill"
-                  objectFit="contain"
+                  fill={true}
+                  style={{ objectFit: 'contain' }}
                 />
               )}
             </div>
@@ -701,14 +700,21 @@ const CardThumbnail: React.FC<ICardThumbnailProps> = ({
       )}
     </div>
   );
-};
+}
 
-const RenderCardThumbnail: React.FC<{
+interface ICardThumbnail {
   cardData: ICards | null | undefined;
   allInvites: Invites[] | null;
   isOwned: boolean;
   inSettings: boolean;
-}> = ({ cardData, allInvites, isOwned, inSettings }) => {
+}
+
+export default function RenderCardThumbnail({
+  cardData,
+  allInvites,
+  isOwned,
+  inSettings,
+}: ICardThumbnail) {
   if (!cardData) {
     return (
       <div className="card-thumbnail-error">Card data is not available.</div>
@@ -723,6 +729,4 @@ const RenderCardThumbnail: React.FC<{
       inSettings={inSettings}
     />
   );
-};
-
-export default RenderCardThumbnail;
+}

@@ -6,7 +6,7 @@ import ManageReferrals from '@/components/user-portal/ManageReferrals';
 import Header from '@/components/common/Header';
 import ProfileHeader from '@/components/user-portal/ProfileHeader';
 import { invitationData, UserData } from '@/types/User.type';
-import addUserPostSignIn from '@/app/actions/userDataActions';
+import { addUserPostSignIn } from '@/app/actions/userDataActions';
 import { getUserData } from '@/app/utils/fetchHelper';
 import { isAuthenticated } from '@/app/utils/auth/amplify-utils';
 import { redirect } from 'next/navigation';
@@ -20,10 +20,13 @@ export default async function SettingsPage({
   const auth = await isAuthenticated();
   if (!auth.isSignedIn) redirect('/login?redirect=/settings');
 
-  let inviteData = undefined;
-  if (searchParams?.invite_id) {
-    inviteData = await addUserPostSignIn(searchParams.invite_id);
-  }
+  const inviteData = await addUserPostSignIn(
+    auth.email,
+    auth.name,
+    auth.userId,
+    searchParams?.invite_id,
+  );
+
   const userData = await getUserData(auth);
 
   return (

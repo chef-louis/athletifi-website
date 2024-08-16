@@ -13,7 +13,14 @@ type InviteAction = {
   card_name?: string | null;
 };
 
-async function invitePostHelper(inviteParams: InviteAction) {
+type InviteResponse = {
+  message?: string | null;
+  error?: string | null;
+};
+
+async function invitePostHelper(
+  inviteParams: InviteAction,
+): Promise<InviteResponse> {
   const response = await fetch(`${inviteUrl}`, {
     method: 'POST',
     headers: {
@@ -23,7 +30,7 @@ async function invitePostHelper(inviteParams: InviteAction) {
     body: JSON.stringify(inviteParams),
   });
 
-  const data = await response.json();
+  const data: InviteResponse = await response.json();
   return data;
 }
 
@@ -38,12 +45,13 @@ export async function invitationAction(
       card_image_id: cardId,
     };
 
-    // const response = await axiosClient.post('/referralInvite', body);
     const data = await invitePostHelper(inviteBody);
 
     if ('error' in data) {
       return {
-        error: data.error || 'An error occurred during the invitation process.',
+        error:
+          (data.error as string) ||
+          'An error occurred during the invitation process.',
       };
     } else {
       revalidateTag('userData');
@@ -72,7 +80,9 @@ export async function inviteDeclineAction(
 
     if ('error' in data) {
       return {
-        error: data.error || 'An error occurred during the decline process.',
+        error:
+          (data.error as string) ||
+          'An error occurred during the decline process.',
       };
     } else {
       revalidateTag('userData');
@@ -99,7 +109,9 @@ export async function inviteRevokeAction(
 
     if ('error' in data) {
       return {
-        error: data.error || 'An error occurred during the revoke process.',
+        error:
+          (data.error as string) ||
+          'An error occurred during the revoke process.',
       };
     } else {
       revalidateTag('userData');

@@ -2,36 +2,19 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ButtonWhiteArrow, UnderLineText } from '@/components/common/Icon';
-import { SignUp, SignUpFormDetails } from '@/types/SignUp.type';
+import { SignUp } from '@/types/SignUp.type';
 import { ToastContainer, toast, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { addNewsletterSignUp } from '@/app/actions/strapiAction';
 
 const IMAGE_WIDTH_GRID = 400;
 const IMAGE_HEIGHT_GRID = 448;
 const IMAGE_WIDTH_PLAYER = 658;
 const IMAGE_HEIGHT_PLAYER = 598;
 
-async function handleSubmit(formDetails: SignUpFormDetails) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ data: formDetails }), // Matching the PostData<T> type structure
-  });
-
-  if (!response.ok) {
-    console.error('Signup failed:', response.statusText);
-    return;
-  }
-
-  const responseData = await response.json();
-  return responseData;
-}
-
-const SignUpForm = () => {
+export default function SignUpForm() {
   // CUSTOM INPUT-CHECK
   const [checked, setChecked] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -41,9 +24,7 @@ const SignUpForm = () => {
 
   const [data, setData] = useState<SignUp>(initialState);
 
-  const formHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formDetails = { data };
+  const formHandler = async (formData: FormData) => {
     const toastOptions: ToastOptions = {
       draggable: false,
       position: 'bottom-right',
@@ -52,21 +33,22 @@ const SignUpForm = () => {
     setLoading(true);
     if (checked) {
       try {
-        const response = await handleSubmit(formDetails);
-        if (response?.data) {
+        const response = await addNewsletterSignUp(formData);
+        if (!response || 'error' in response) {
+          toast.error('Failed to sign-up for newsletter', toastOptions);
+          console.error(`${JSON.stringify(response.error)}`);
+        } else {
           toast.success('You have successfully signed-up!', toastOptions);
           setData({
             ...data,
             email: '',
           });
-        } else if (response.response.status === 400) {
-          toast.error(
-            'This email has already been used to sign-up',
-            toastOptions,
-          );
         }
       } catch (err) {
-        toast.error('Hit an unknown error', toastOptions);
+        toast.error(
+          `Hit an unknown error: ${JSON.stringify(err)}`,
+          toastOptions,
+        );
       }
     } else {
       toast.warning(
@@ -81,7 +63,7 @@ const SignUpForm = () => {
       {/* GRID-LINE IMG */}
       <Image
         className="lg:w-462 lg:h-452 w-40 h-40 lg:top-10 lg:-left-10 absolute -z-20 opacity-40"
-        src="/assets/img/svg/blogs-grid-line.svg"
+        src="/assets/img/svg/blog-grid-line.svg"
         width={IMAGE_WIDTH_GRID}
         height={IMAGE_HEIGHT_GRID}
         alt=""
@@ -111,10 +93,7 @@ const SignUpForm = () => {
                 future of sports where anyone can get exposure to scouts.
               </p>
               <form
-                action="submit"
-                onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-                  formHandler(e)
-                }
+                action={(formData) => formHandler(formData)}
                 className="w-full sm:w-3/4"
               >
                 <div className="flex flex-col mt-6">
@@ -132,6 +111,7 @@ const SignUpForm = () => {
                     placeholder="Email"
                     className="font-Sugoe font-normal input:-webkit-autofill focus:border-primary autofill:none text-base text-primary leading-6 py-5 px-4 bg-transparent w-full lg:max-w-400 mt-1.5 border border-1 border-offwhite outline-none"
                     id="email"
+                    name="email"
                     onChange={(e) =>
                       setData({
                         ...data,
@@ -205,6 +185,4 @@ const SignUpForm = () => {
       <ToastContainer theme="dark" />
     </section>
   );
-};
-
-export default SignUpForm;
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, startTransition } from 'react';
+import { useEffect, useRef, useState, startTransition } from 'react';
 import Link from 'next/link';
 import {
   WhiteFacebookIcon,
@@ -23,7 +23,7 @@ import { UserData } from '@/types/User.type';
 
 const SCROLL_THRESHOLD: number = 200;
 
-export default function Header({ userData }: { userData: UserData }) {
+export default function Header({ userData }: { userData: UserData | null }) {
   const [open, setOpen] = useState<boolean>(false);
   const [path, setPath] = useState<string>('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -39,7 +39,7 @@ export default function Header({ userData }: { userData: UserData }) {
         case 'signedIn':
           // Redirect user to initialize notification preferences upon first login
           // setIsLoggedIn(true);
-          startTransition(() => router.refresh());
+          // startTransition(() => router.refresh());
           break;
         case 'signedOut':
           // setIsLoggedIn(false);
@@ -199,12 +199,12 @@ export default function Header({ userData }: { userData: UserData }) {
                 <li>
                   <Link
                     onClick={() => setOpen(false)}
-                    href="/blogs?page=1"
+                    href="/blog?page=1"
                     className={`text-md md:text-base text-white font-normal font-Segoe opacity-70 hover:opacity-100 duration-300 relative after:content-[''] after:absolute after:w-0 hover:after:w-full after:h-2pixel after:-bottom-1 after:right-0 after:bg-shadow_blue after:rounded-md after:transition-all after:duration-300 after:ease-out hover:after:left-0 hover:after:right-auto ${
-                      path == '/blogs' ? '!opacity-100' : ''
+                      path == '/blog' ? '!opacity-100' : ''
                     }`}
                   >
-                    Blogs
+                    Blog
                   </Link>
                 </li>
                 <li>
@@ -387,6 +387,7 @@ export default function Header({ userData }: { userData: UserData }) {
       </div>
       {userData && userData.init_notifications === false && !closedModal && (
         <UserNotificationsModal
+          userData={userData}
           amplify_id={userData.amplify_id as string}
           setClosedModal={setClosedModal}
         />

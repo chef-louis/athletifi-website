@@ -1,66 +1,38 @@
-'use client';
+import { addUserPostSignIn } from '@/app/actions/userDataActions';
+import { getUserData } from '@/app/utils/fetchHelper';
+import { isAuthenticated } from '@/app/utils/auth/amplify-utils';
+import Header from '@/components/common/Header';
+import InviteModal from '@/components/common/InviteModal';
+import { invitationData, UserData } from '@/types/User.type';
+import { redirect } from 'next/navigation';
+import DashboardMain from '@/components/dashboard/DashboardMain';
 
-import type { NextPage } from 'next';
-// import { useParams, notFound } from 'next/navigation';
-// import { useState, useEffect } from 'react';
+export default async function PlayerDashboardPage({
+  params,
+  searchParams,
+}: {
+  params: { cardId: string[] };
+  searchParams?: { [key: string]: string | undefined };
+}) {
+  const cardId = params.cardId.join('/');
 
-import Charts from '@/components/dashboard/Charts';
-import Footer from '@/components/common/Footer';
-import HeroBanner from '@/components/dashboard/HeroBanner';
-import LatestMatch from '@/components/dashboard/LatestMatchCard';
-import PastMatchesLayout from '@/components/dashboard/PastMatchesLayout';
-import Profile from '@/components/dashboard/ProfileCard';
-import SeasonSection from '@/components/dashboard/SeasonSectionLayout';
-import BackToTop from '@/components/common/BackToTop';
-import DashboardFetchError from '@/components/dashboard/DashboardFetchError';
-import { useDashboardData } from '@/states/dashboardStore';
-import { useParams } from 'next/navigation';
-import { sourceSans3 } from '@/app/utils/helpers';
+  const auth = await isAuthenticated();
+  if (!auth.isSignedIn) redirect('/login?redirect=/profile');
 
-interface PageProps {
-  params: { cardId: string | number };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
+  const inviteData = await addUserPostSignIn(
+    auth.email,
+    auth.name,
+    auth.userId,
+    searchParams?.invite_id,
+  );
 
-const PlayerDashboardPage: NextPage<PageProps> = () => {
-  const { cardId } = useParams();
-  const cardIdValue = Array.isArray(cardId) ? cardId.join('/') : cardId;
-  const { fetchStatus, errorMessage } =
-    useDashboardData(cardIdValue).dashboardData;
+  const userData = await getUserData(auth);
 
   return (
-    <div className={`overflow-hidden ${sourceSans3.className}`}>
-      {fetchStatus === 'error' ? (
-        <DashboardFetchError message={errorMessage} />
-      ) : (
-        <>
-          <div className="bg-gradient-to-l from-cardsBackground via-[#032436]  to-[#032436] flex justify-center w-full border-collapse">
-            <HeroBanner />
-          </div>
-          <div className="flex justify-center w-full">
-            <div className="w-full flex flex-col py-3 lg:py-2 mt-2 max-w-[650px] lg:max-w-[1130px] lg:grid md:grid-cols-11 lg:items-end">
-              <div className="mx-3 lg:col-start-8 lg:col-span-4 lg:my-2 lg:ml-0 lg:mr-6 order-1 lg:order-3">
-                <Profile />
-              </div>
-              <div className="mb-4 mx-3 lg:col-start-1 lg:col-span-7 lg:my-2 lg:mx-4 order-2 lg:order-1">
-                <LatestMatch />
-              </div>
-              <div className="mb-3 mx-3 lg:col-start-1 lg:col-span-7 lg:my-2 lg:mx-4 order-3 lg:order-2">
-                <Charts />
-              </div>
-            </div>
-          </div>
-          <main className="w-full px-4 flex flex-col items-center bg-gradient-to-l from-cardsBackground via-[#032436]  to-[#032436] bg-opacity-95">
-            <SeasonSection />
-            <span className="h-px bg-partnersBorders w-full max-w-[1130px] my-8 md:my-4" />
-            <PastMatchesLayout />
-          </main>
-          <BackToTop />
-          <Footer />
-        </>
-      )}
-    </div>
+    <>
+      <Header userData={userData as UserData} />
+      <InviteModal inviteData={inviteData as invitationData | undefined} />
+      <DashboardMain cardId={cardId} />
+    </>
   );
-};
-
-export default PlayerDashboardPage;
+}

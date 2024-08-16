@@ -1,7 +1,7 @@
 'use client';
 // This component renders the footer of the website.
 // It includes copyright information and footer links.
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   WhiteFacebookIcon,
   WhiteInstaIcon,
@@ -12,7 +12,7 @@ import {
 } from './Icon';
 import Link from 'next/link';
 
-const Footer = () => {
+export default function Footer() {
   const today: Date = new Date();
   const year: number = today.getFullYear();
 
@@ -53,12 +53,12 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/blogs?page=1"
+                  href="/blog?page=1"
                   className={`text-base text-white font-normal font-Segoe opacity-70 hover:opacity-100 duration-300 relative after:content-[''] after:absolute after:w-0 hover:after:w-full after:h-2pixel after:-bottom-1 after:right-0 after:bg-shadow_blue after:rounded-md after:transition-all after:duration-300 after:ease-out hover:after:left-0 hover:after:right-auto ${
-                    path == '/blogs' ? '!opacity-100' : ''
+                    path == '/blog' ? '!opacity-100' : ''
                   }`}
                 >
-                  Blogs
+                  Blog
                 </Link>
               </li>
               <li>
@@ -201,6 +201,4 @@ const Footer = () => {
       </footer>
     </>
   );
-};
-
-export default Footer;
+}

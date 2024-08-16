@@ -5,7 +5,7 @@ import BackToTop from '@/components/common/BackToTop';
 import Footer from '@/components/common/Footer';
 import Accordion from '@/components/user-portal/FAQ';
 import { isAuthenticated } from '@/app/utils/auth/amplify-utils';
-import addUserPostSignIn from '@/app/actions/userDataActions';
+import { addUserPostSignIn } from '@/app/actions/userDataActions';
 import { getUserData } from '@/app/utils/fetchHelper';
 import { invitationData, UserData } from '@/types/User.type';
 import { redirect } from 'next/navigation';
@@ -27,10 +27,13 @@ export default async function HelpPage({
   const auth = await isAuthenticated();
   if (!auth.isSignedIn) redirect('/login?redirect=/help-support');
 
-  let inviteData = undefined;
-  if (searchParams?.invite_id) {
-    inviteData = await addUserPostSignIn(searchParams.invite_id);
-  }
+  const inviteData = await addUserPostSignIn(
+    auth.email,
+    auth.name,
+    auth.userId,
+    searchParams?.invite_id,
+  );
+
   const userData = await getUserData(auth);
 
   return (

@@ -1,8 +1,7 @@
 'use server';
 
-import { emptyNotifications } from '@/types/User.type';
+import { emptyNotifications, invitationData } from '@/types/User.type';
 import { revalidateTag } from 'next/cache';
-import { isAuthenticated } from '@/utils/auth/amplify-utils';
 
 const userDataUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/userData`;
 const addUserUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/addUser`;
@@ -12,7 +11,7 @@ async function enableNotificationHelper(
   amplifyId: string,
   notificationType: string,
 ) {
-  const response = await fetch(`${userDataUrl}`, {
+  await fetch(`${userDataUrl}`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -23,8 +22,8 @@ async function enableNotificationHelper(
       notification_type: notificationType,
     }),
   });
-  const data = await response.json();
-  return data;
+
+  return;
 }
 
 async function disableNotificationHelper(
@@ -32,15 +31,16 @@ async function disableNotificationHelper(
   notificationType: string,
 ) {
   const deleteUrl = `${userDataUrl}?amplify_id=${amplifyId}&notification_types=${notificationType}`;
-  const response = await fetch(deleteUrl, {
+  await fetch(deleteUrl, {
     method: 'DELETE',
     headers: {
       'Content-type': 'application/json',
       Authorization: process.env.NEXT_PUBLIC_TEMP_API_AUTH,
     } as HeadersInit,
   });
-  const data = await response.json();
-  return data;
+  // const data = await response.json();
+  // return data;
+  return;
 }
 
 export async function addNotification(
@@ -90,7 +90,7 @@ export async function deleteNotification(
 }
 
 async function deleteUserHelper(amplify_id: string) {
-  const response = await fetch(deleteUserDataUrl, {
+  await fetch(deleteUserDataUrl, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -100,8 +100,9 @@ async function deleteUserHelper(amplify_id: string) {
       amplify_id: amplify_id,
     }),
   });
-  const data = await response.json();
-  return data;
+  // const data = await response.json();
+  // return data;
+  return;
 }
 
 export async function deleteUserRequest(amplify_id: string) {
@@ -120,36 +121,47 @@ async function addUserHelper(
   email: string | undefined,
   name: string | undefined,
   amplifyId: string | undefined,
-  inviteId: string,
-) {
+  inviteId?: string | undefined,
+): Promise<invitationData> {
+  const postBody = inviteId
+    ? {
+        amplify_id: amplifyId,
+        email: email,
+        name: name,
+        invite_id: inviteId,
+      }
+    : {
+        amplify_id: amplifyId,
+        email: email,
+        name: name,
+      };
+  console.log(JSON.stringify(postBody));
   const response = await fetch(`${addUserUrl}`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
       Authorization: process.env.NEXT_PUBLIC_TEMP_API_AUTH,
     } as HeadersInit,
-    body: JSON.stringify({
-      amplify_id: amplifyId,
-      email: email,
-      name: name,
-      invite_id: inviteId,
-    }),
+    body: JSON.stringify(postBody),
   });
 
-  const data = await response.json();
+  const data: invitationData = await response.json();
   return data;
 }
 
-export default async function addUserPostSignIn(inviteId: string) {
-  const { userId, name, email } = await isAuthenticated();
-
+export async function addUserPostSignIn(
+  email: string,
+  name: string,
+  userId: string,
+  inviteId?: string,
+): Promise<invitationData | undefined> {
+  console.log('inviteId %s', inviteId);
   try {
     const data = await addUserHelper(email, name, userId, inviteId);
 
-    revalidateTag('userData');
     return data;
   } catch (error) {
     console.error(error);
-    return false;
+    return undefined;
   }
 }
