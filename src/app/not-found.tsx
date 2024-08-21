@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import { getUserData } from '@/app/utils/fetchHelper';
 import { UserData } from '@/types/User.type';
 import { isAuthenticated } from '@/app/utils/auth/amplify-utils';
-import { addUserPostSignIn } from './actions/userDataActions';
+import { addUserPostSignIn } from '@/app/actions/userDataActions';
 
 export const metadata: Metadata = {
   title: SEO_CONFIG.notFound.title,

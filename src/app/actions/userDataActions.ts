@@ -135,7 +135,6 @@ async function addUserHelper(
         email: email,
         name: name,
       };
-  console.log(JSON.stringify(postBody));
   const response = await fetch(`${addUserUrl}`, {
     method: 'POST',
     headers: {
@@ -155,7 +154,6 @@ export async function addUserPostSignIn(
   userId: string,
   inviteId?: string,
 ): Promise<invitationData | undefined> {
-  console.log('inviteId %s', inviteId);
   try {
     const data = await addUserHelper(email, name, userId, inviteId);
 

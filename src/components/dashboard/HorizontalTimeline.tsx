@@ -19,6 +19,7 @@ const HorizontalTimeline: React.FC<HorizontalTimelineProps> = ({
 }) => {
   const timelineRef = useRef<HTMLDivElement>(null);
   const [, setTimelineWidth] = useState(window.innerWidth);
+  const [hovered, setHovered] = useState<number | null>(null);
 
   useEffect(() => {
     setTimelineWidth(timelineRef.current?.offsetWidth || 0);
@@ -64,6 +65,8 @@ const HorizontalTimeline: React.FC<HorizontalTimelineProps> = ({
                 handlePlayClick(index);
                 handleClick(index);
               }}
+              onMouseEnter={() => setHovered(index)}
+              onMouseLeave={() => setHovered(null)}
               className={`rounded-full cursor-pointer ${
                 currentItem === index ? 'bg-skyblue' : 'bg-gray-300'
               }`}
@@ -76,17 +79,19 @@ const HorizontalTimeline: React.FC<HorizontalTimelineProps> = ({
                 transform: 'translateY(-50%)',
               }}
             ></div>
-            <div
-              className={`mt-2 text-sm text-offwhite`}
-              style={{
-                left: `${leftPosition - 24}px`,
-                position: 'absolute',
-                top: '16px',
-                transform: 'translateY(-50%)',
-              }}
-            >
-              {time}
-            </div>
+            {hovered === index && (
+              <div
+                className={`mt-2 text-sm text-offwhite`}
+                style={{
+                  left: `${leftPosition - 24}px`,
+                  position: 'absolute',
+                  top: '16px',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                {time}
+              </div>
+            )}
           </div>
         );
       })}
