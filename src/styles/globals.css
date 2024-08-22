@@ -1,4 +1,4 @@
-@import url('./dev..css');
+@import url('./dev.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

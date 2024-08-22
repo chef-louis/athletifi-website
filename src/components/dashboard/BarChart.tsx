@@ -102,7 +102,7 @@ const StatsBarChart: React.FC<IRatingProps> = ({
                 isMobile ? { left: -25, right: 30 } : { left: 40, right: 50 }
               }
             >
-              <XAxis hide axisLine={false} type="number" />
+              <XAxis hide axisLine={false} type="number" domain={[0, 90]} />
               <YAxis
                 yAxisId={0}
                 type="category"
@@ -126,7 +126,7 @@ const StatsBarChart: React.FC<IRatingProps> = ({
               {/* <Tooltip cursor={false} /> */}
               <Bar
                 dataKey={yKey}
-                minPointSize={2}
+                minPointSize={0}
                 barSize={isMobile ? 26 : 32}
                 radius={20}
                 background={{ fill: LAYERCOLOR, radius: 20, opacity: 0.1 }}

@@ -387,7 +387,6 @@ export default function Header({ userData }: { userData: UserData | null }) {
       </div>
       {userData && userData.init_notifications === false && !closedModal && (
         <UserNotificationsModal
-          userData={userData}
           amplify_id={userData.amplify_id as string}
           setClosedModal={setClosedModal}
         />
