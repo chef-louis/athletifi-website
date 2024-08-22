@@ -17,8 +17,11 @@ export default async function CardRedirect({ id }: { id: string }) {
   }
   const inviteId = responseJson.result.invite_id;
   const dashboardSlug = responseJson.result.dashboard_slug;
+  const hasOwner = responseJson.result.has_owner;
 
-  if (inviteId === '') {
+  if (!hasOwner) {
+    redirect('/redirect-disabled');
+  } else if (inviteId === '') {
     redirect(`/dashboard/${dashboardSlug}`);
   } else {
     redirect(
