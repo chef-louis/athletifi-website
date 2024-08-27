@@ -31,12 +31,12 @@ export default function Profile({
                   <td className="text-right px-[4px]">{profile.club}</td>
                 </tr>
               )}
-              {profile.league && (
+              {/* {profile.league && (
                 <tr className="border-b border-partnersBorders">
                   <td className="text-left py-2 px-[4px]">League</td>
                   <td className="text-right px-[4px]">{profile.league}</td>
                 </tr>
-              )}
+              )} */}
               {profile.team && (
                 <tr className="border-b border-partnersBorders">
                   <td className="text-left py-2 px-[4px]">Team name</td>
