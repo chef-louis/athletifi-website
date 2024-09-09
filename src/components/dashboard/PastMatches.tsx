@@ -4,15 +4,66 @@ import Skeleton from 'react-loading-skeleton';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { IMatchDataExtended } from '@/types/Dashboard.type';
+import { formatDate } from '@/app/utils/formatDate';
 
-const parseDate = (dateString: string) => new Date(dateString);
+// const formatDate = (dateString: string): Date => {
+//   // Remove extra spaces and split the string
+//   const parts = dateString.replace(/\s+/g, ' ').split(' ');
 
-const isThisWeek = (date: number | Date) => {
+//   if (parts.length !== 6) {
+//     console.error('Unexpected date format:', dateString);
+//     return new Date(NaN); // Invalid date
+//   }
+
+//   const [dayOfWeek, day, month, year, _, time] = parts;
+//   const months = [
+//     'Jan',
+//     'Feb',
+//     'Mar',
+//     'Apr',
+//     'May',
+//     'Jun',
+//     'Jul',
+//     'Aug',
+//     'Sep',
+//     'Oct',
+//     'Nov',
+//     'Dec',
+//   ];
+//   const monthIndex = months.indexOf(month);
+
+//   if (monthIndex === -1) {
+//     console.error('Invalid month:', month);
+//     return new Date(NaN); // Invalid date
+//   }
+
+//   const [hours, minutes] = time.split(':');
+//   const date = new Date(
+//     parseInt(year),
+//     monthIndex,
+//     parseInt(day),
+//     parseInt(hours),
+//     parseInt(minutes),
+//   );
+
+//   if (isNaN(date.getTime())) {
+//     console.error('Invalid date:', dateString);
+//     return new Date(); // Return current date instead of invalid date
+//   } else {
+//     return date;
+//   }
+// };
+
+const isThisWeek = (date: Date) => {
+  if (isNaN(date.getTime())) {
+    return false; // Invalid date
+  }
   const now = new Date();
   const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
   const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
   return date >= startOfWeek && date <= endOfWeek;
 };
+
 //TODO: move filtering to dashboardStore if needed.
 export default function PastMatches({
   matchList,
@@ -21,11 +72,15 @@ export default function PastMatches({
 }) {
   const today = new Date();
   const pastMatches =
-    matchList?.filter((match) => parseDate(match.datetime as string) < today) ??
-    [];
+    matchList?.filter((match) => {
+      const matchDate = formatDate(match.datetime as string);
+      return !isNaN(matchDate.getTime()) && matchDate < today;
+    }) ?? [];
   const futureMatches =
-    matchList?.filter((match) => parseDate(match.datetime as string) > today) ??
-    [];
+    matchList?.filter((match) => {
+      const matchDate = formatDate(match.datetime as string);
+      return !isNaN(matchDate.getTime()) && matchDate > today;
+    }) ?? [];
 
   // Check if in view
   const { ref: inViewRef, inView } = useInView({
@@ -67,7 +122,7 @@ export default function PastMatches({
                       matchData={match}
                       isFuture={true}
                       isThisWeek={isThisWeek(
-                        parseDate(match.datetime as string),
+                        formatDate(match.datetime as string),
                       )}
                     />
                   </motion.div>

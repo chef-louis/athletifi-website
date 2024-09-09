@@ -28,7 +28,7 @@ const Preloader = () => {
   if (!preloader) return null;
 
   return (
-    <div className="preloader__icon preloader__bg fixed min-h-screen top-0 left-0 w-full z-50 flex justify-center items-center">
+    <div data-testid="preloader" className="preloader__icon preloader__bg fixed min-h-screen top-0 left-0 w-full z-50 flex justify-center items-center">
       <span>
         <PageLogo />
       </span>

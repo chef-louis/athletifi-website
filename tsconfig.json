@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["jest", "node"],
     "target": "es2015",
     "lib": ["dom", "dom.iterable", "esnext"],
     "downlevelIteration": true,

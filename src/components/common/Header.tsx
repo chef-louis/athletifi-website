@@ -56,7 +56,7 @@ export default function Header({ userData }: { userData: UserData | null }) {
     // only add the event listener when the dropdown is opened
     if (!showDropdown) return;
     function handleOutSideClick(event: MouseEvent) {
-      if (!dropdown.current?.contains(event.target as Node)) {
+      if (!dropdown.current?.contains(event.target as Node) && showDropdown) {
         setShowDropdown(false);
         event.stopPropagation();
       }
@@ -126,6 +126,11 @@ export default function Header({ userData }: { userData: UserData | null }) {
   // const socialIconDropDown = () => {
   //   setNavSocialIcon(!navSocialIcon);
   // };
+
+  const toggleDropdown = (e: { stopPropagation: () => void; }) => {
+    e.stopPropagation();
+    setShowDropdown(!showDropdown);
+  };
 
   const linksStyle = `opacity-80 hover:opacity-100 duration-300 relative after:content-[''] after:absolute after:w-0 hover:after:w-full after:h-2pixel after:-bottom-1 after:right-0 after:bg-shadow_blue after:rounded-md after:transition-all after:duration-300 after:ease-out hover:after:left-0 hover:after:right-auto`;
 
@@ -284,17 +289,19 @@ export default function Header({ userData }: { userData: UserData | null }) {
                     </Link>
                   </div>
                 ) : (
-                  <div className="hidden relative md:flex items-center text-primary">
+                  <div className="relative md:flex items-center text-primary">
                     <div
+                     
+                      ref={dropdown}
                       className="flex items-center cursor-pointer"
-                      onClick={() => setShowDropdown(!showDropdown)}
+                      onClick={toggleDropdown}
                     >
-                      <p className="text-base px-2 ">{userData.name}</p>
+                      <p className="text-base px-2" data-testid="username">{userData.name}</p>
                       <FontAwesomeIcon icon={faChevronDown} />
                     </div>
                     {showDropdown && (
                       <div
-                        ref={dropdown}
+                        data-testid="user-dropdown"
                         className="absolute flex flex-col justify-between w-48 h-60 top-8 right-px  bg-cardsDark rounded px-4 py-8"
                       >
                         <Link
