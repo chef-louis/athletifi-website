@@ -1,0 +1,8 @@
+.aidigestignore
+custom-aws-exports.js
+amplifyconfiguration.json
+aws-exports.js
+components/common/Icon.tsx
+components/user-portal/FAQ.tsx
+components/auth/AuthOverrides.tsx
+styles

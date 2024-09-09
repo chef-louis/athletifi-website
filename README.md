@@ -26,7 +26,6 @@ The AthletiFi project utilizes the following key technologies:
 - **AWS Amplify**: Development platform for building secure and scalable mobile and web applications.
 - **AWS Cognito**: User authentication and authorization service.
 - **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
-- **Jotai**: A primitive and flexible state management library for React.
 - **Recharts**: A composable charting library built on React components.
 - **Strapi**: Open-source headless CMS (Content Management System) for managing content via APIs.
 
@@ -95,6 +94,7 @@ To set up AWS Amplify for the AthletiFi project, follow these steps:
    ```
 
 9. When prompted, select the following options:
+
    - Choose the AWS profile: `default`
    - Choose the Amplify environment: `athletifi-website`
    - Confirm the project setup
@@ -158,6 +158,7 @@ Assuming you have already run `yarn install` which installs all the dependencies
 The project follows a standard Next.js file structure:
 
 - **/app**: Contains the main Next.js pages and API routes.
+  - **/actions**: Contains definition files for server actions used throughout the application.
   - **/api**: Holds the backend API routes that connect to AWS Lambda functions.
   - **/addUser**: Adds a new user.
   - **/contact**: Handles contact/support requests.
@@ -174,7 +175,6 @@ The project follows a standard Next.js file structure:
 - **/public**: Publicly hosted static files like images, fonts, and videos.
 - **/src**: Contains the application source code.
   - **/components**: React components organized by feature/page.
-  - **/states**: Jotai global state atoms and custom hooks.
   - **/styles**: Custom CSS stylesheets.
   - **/types**: TypeScript type/interface definitions.
   - **/utils**: Utility and helper functions.
@@ -185,19 +185,19 @@ The AthletiFi project is organized into various components based on features and
 
 ## API Routes
 
-The project includes several API routes that handle requests and communicate with the backend services. These routes are defined in the `/app/api` directory and include endpoints for user management, player dashboards, news articles, and more. Detailed descriptions of each API route can be found in the [API Routes](#api-routes) section.
+The project utilizes NextJS server actions and server components to communicate with the backend. These actions are defined within files in the `/app/actions` directory and encompass utilities for user management, player dashboards, news articles, and more.
 
 ## Utility Functions
 
 The project includes various utility functions that provide helper functionalities and abstractions for common tasks. These functions are organized in the `/src/utils` directory and cover areas such as data transformation, API requests, authentication, and more. Detailed descriptions of each utility function can be found in the [Utility Functions](#utility-functions) section.
 
-## State Management
-
-The project uses Jotai for global state management. Jotai is a primitive and flexible state management library for React that allows you to define global state atoms and access them from any component. The state atoms and custom hooks are defined in the `/src/states` directory.
-
 ## Styling
 
 The project uses Tailwind CSS for styling the user interface. Tailwind CSS provides a set of utility classes that can be composed to quickly build custom designs. The configuration for Tailwind CSS can be found in the `tailwind.config.js` file. Custom CSS styles are defined in the `/src/styles` directory.
+
+## Testing
+
+The project uses Jest for unit testing along with Playwright for E2E and integration testing. Jest test files can be found in the `/__tests__` directory while Playwright tests are organized under the `/__e2etests__`. Both testing directories utilize a similar folder structure as the `/app` directory for keeping our tests organized as best as possible. To execute Jest test suites, navigate to the root directory of the project and run `yarn test` and for Playwright you can run `yarn test:e2e` to load the test console for executing Playwright test suites.
 
 ## Deployment
 
@@ -211,9 +211,8 @@ To ensure code quality and maintainability, the project follows various best pra
 - Follow a consistent code style and naming conventions.
 - Use meaningful and descriptive names for components, functions, and variables.
 - Keep components small and focused on a single responsibility.
-- Use Jotai for global state management and avoid prop drilling.
+- Use NextJS caching to provide efficient management of data throughout the application.
 - Leverage Tailwind CSS for rapid UI development and consistency.
 - Write unit tests for critical components and functions.
 - Use Git for version control and follow a branching strategy.
 - Regularly update dependencies and address security vulnerabilities.
-

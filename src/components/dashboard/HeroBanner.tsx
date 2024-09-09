@@ -49,7 +49,7 @@ export default function HeroBanner({
 
   return (
     <SkeletonTheme baseColor="#113448" highlightColor="#525252">
-      <section className="relative items-center md:items-start flex flex-col-reverse md:flex-row justify-center md:justify-start h-dvh md:h-[420px] lg:h-[370px] w-full md:max-w-[860px] lg:max-w-[1130px] px-4 md:px-8">
+      <section className="relative items-center mt-45 md:mt-0 md:items-start flex flex-col-reverse md:flex-row justify-center md:justify-start h-dvh md:h-[420px] lg:h-[370px] w-full md:max-w-[860px] lg:max-w-[1130px] px-4 md:px-8">
         {profile?.club_logo ? (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -96,10 +96,13 @@ export default function HeroBanner({
 
         {profile?.card_url ? (
           <div className="md:mt-20 lg:-mb-[255px]">
-            <FlipCard cardUrl={profile?.card_url} />
+            <FlipCard
+              data-testid="mock-flip-card"
+              cardUrl={profile?.card_url}
+            />
           </div>
         ) : (
-          <div className="mb-20 mt-100 lg:mt-150">
+          <div data-testid="skeleton" className="mb-20 mt-100 lg:mt-150">
             <div className="flex items-center">
               <Skeleton
                 className="min-w-[350px] min-h-[350px] md:min-w-[300px] md:min-h-[300px] lg:min-h-[380px] lg:min-w-[380px]"
