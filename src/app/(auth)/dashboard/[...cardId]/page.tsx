@@ -16,8 +16,15 @@ export default async function PlayerDashboardPage({
 }) {
   const cardId = params.cardId.join('/');
 
+  const filteredSearchParams = Object.fromEntries(
+    Object.entries(searchParams || {}).filter(([_, v]) => v !== undefined),
+  ) as Record<string, string>;
+  const pathname = `/dashboard/${cardId}${Object.keys(filteredSearchParams).length ? '?' + new URLSearchParams(filteredSearchParams).toString() : ''}`;
   const auth = await isAuthenticated();
-  if (!auth.isSignedIn) redirect('/login?redirect=/profile');
+  //if (!auth.isSignedIn) redirect('/login?redirect=/profile');
+  if (!auth.isSignedIn) {
+    redirect(`/login?redirect=${pathname}&intendedPath=${pathname}`);
+  }
 
   const inviteData = await addUserPostSignIn(
     auth.email,

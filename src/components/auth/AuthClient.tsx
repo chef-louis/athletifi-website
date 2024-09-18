@@ -9,7 +9,7 @@ import {
 import { ComponentOverrides, FormFieldsOverrides } from './AuthOverrides';
 import { loginTheme } from './AuthTheme';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SignUpInput, signUp } from 'aws-amplify/auth';
 import { sourceSans3 } from '@/app/utils/helpers';
 
@@ -23,6 +23,8 @@ const AuthClient = ({
   inviteId: string | undefined;
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams(); 
+  const intendedPath = searchParams.get('intendedPath');
 
   const { route } = useAuthenticator((context) => [
     context.user,
@@ -34,8 +36,12 @@ const AuthClient = ({
       const inviteParam = inviteId ? `?invite_id=${inviteId}` : '';
       if (redirect) {
         router.push(redirect + inviteParam);
-      } else {
-        router.push(`/profile${inviteParam}`);
+      } else { 
+        if(intendedPath) {
+          router.push(intendedPath);
+        } else  {
+          router.push(`/profile${inviteParam}`);
+        }
       }
     }
   }, [route, redirect, router, inviteId]);
