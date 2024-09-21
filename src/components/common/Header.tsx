@@ -127,7 +127,7 @@ export default function Header({ userData }: { userData: UserData | null }) {
   //   setNavSocialIcon(!navSocialIcon);
   // };
 
-  const toggleDropdown = (e: { stopPropagation: () => void; }) => {
+  const toggleDropdown = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     setShowDropdown(!showDropdown);
   };
@@ -289,14 +289,17 @@ export default function Header({ userData }: { userData: UserData | null }) {
                     </Link>
                   </div>
                 ) : (
-                  <div className="relative md:flex items-center text-primary">
+                  <div
+                    ref={dropdown}
+                    className="relative md:flex items-center text-primary"
+                  >
                     <div
-                     
-                      ref={dropdown}
                       className="flex items-center cursor-pointer"
                       onClick={toggleDropdown}
                     >
-                      <p className="text-base px-2" data-testid="username">{userData.name}</p>
+                      <p className="text-base px-2" data-testid="username">
+                        {userData.name}
+                      </p>
                       <FontAwesomeIcon icon={faChevronDown} />
                     </div>
                     {showDropdown && (
@@ -306,19 +309,27 @@ export default function Header({ userData }: { userData: UserData | null }) {
                       >
                         <Link
                           href="/profile"
+                          onClick={() => {
+                            setShowDropdown(!showDropdown);
+                          }}
                           className={`${linksStyle} mr-auto`}
                         >
                           My cards
                         </Link>
                         <Link
                           href="/settings"
-                          onClick={() => setShowDropdown(!showDropdown)}
+                          onClick={() => {
+                            setShowDropdown(!showDropdown);
+                          }}
                           className={`${linksStyle} mr-auto`}
                         >
                           Settings
                         </Link>
                         <Link
                           href="/help-support"
+                          onClick={() => {
+                            setShowDropdown(!showDropdown);
+                          }}
                           className={`${linksStyle} mr-auto`}
                         >
                           Help & Support
