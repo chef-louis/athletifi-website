@@ -66,6 +66,12 @@ export default function InviteModal({
         inviteTitle = 'Registration Success';
         inviteMessage =
           'Thank you for registering! You have successfully claimed your card. You can now view and manage it from your dashboard. If you have any questions, feel free to contact our support team.';
+      } else if (
+        inviteData.invitation.invite_status === 'SUCCESS_GUEST_REQUEST'
+      ) {
+        inviteTitle = 'Guest Request Accepted';
+        inviteMessage =
+          'Thank you for confirming a guest request on one of your player cards! To further manage guest access on your player cards, navigate to the settings page. If you have any questions, please contact our support team.';
       }
 
       // Set the invite status state with the title and message

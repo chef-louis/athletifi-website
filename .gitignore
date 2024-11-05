@@ -84,3 +84,6 @@ codebase.md
 /playwright/.cache/
 
 .aidigestignore
+
+# Sentry Config File
+.env.sentry-build-plugin

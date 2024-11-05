@@ -39,7 +39,7 @@ export default async function PlayerDashboardPage({
     <>
       <Header userData={userData as UserData} />
       <InviteModal inviteData={inviteData as invitationData | undefined} />
-      <DashboardMain cardId={cardId} />
+      <DashboardMain cardId={cardId} userData={userData as UserData} />
     </>
   );
 }

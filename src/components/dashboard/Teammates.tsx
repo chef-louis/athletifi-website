@@ -1,42 +1,35 @@
-import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import '@/styles/globals.css';
 import { ITeammate } from '@/types/Dashboard.type';
+import TeammateCard from './TeammateCard';
+import { ICards } from '@/types/User.type';
 
 export default function Teammates({
   teammates,
+  requesterEmail,
+  teamName,
+  ownedCards,
+  guestCards,
 }: {
-  teammates: ITeammate[] | null;
+  teammates: ITeammate[] | null | undefined;
+  requesterEmail: string | null | undefined;
+  teamName: string | null | undefined;
+  ownedCards: ICards[] | null;
+  guestCards: ICards[] | null;
 }) {
   return (
     <>
       {teammates && teammates[0]?.name ? (
-        <div className=" w-full my-8 lg:my-12 lg:mt-0">
-          <div className="flex lg:flex-col gap-3 overflow-auto pr-4 pb-4">
+        <div className="w-full my-8 lg:my-12 lg:mt-0">
+          <div className="flex gap-3 overflow-auto pr-4 pb-4">
             {teammates.map((teammate) => (
-              <div key={`${teammate.name}-${teammate.number}`}>
-                {teammate.avatar_url && teammate.name && (
-                  <div className="flex items-center flex-col lg:flex-row bg-cardsBackground rounded-10 p-3 min-w-32 shadow-md">
-                    <Image
-                      src={teammate.avatar_url}
-                      alt={teammate.name}
-                      width={76}
-                      height={76}
-                      className="rounded-full bg-slate-500 mb-3 lg:mb-0"
-                    />
-                    <div className="md:ml-0 lg:ml-4 mt-2 md:mt-0 flex flex-col items-center lg:items-start h-[72px] justify-between lg:justify-around">
-                      <p className="text-base text-center lg:text-start text-primary leading-5 mt-2 md:mt-0">
-                        {teammate.name}
-                      </p>
-                      {teammate.number !== null && (
-                        <p className="text-center inline-block max-w-full text-sm text-offwhite">
-                          #{teammate.number}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <TeammateCard
+                teammate={teammate}
+                requesterEmail={requesterEmail}
+                teamName={teamName}
+                ownedCards={ownedCards}
+                guestCards={guestCards}
+              />
             ))}
           </div>
         </div>

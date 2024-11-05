@@ -5,12 +5,14 @@ import { revalidateTag } from 'next/cache';
 const inviteUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/referralInvite`;
 
 type InviteAction = {
-  action: 'invite' | 'decline' | 'revoke';
+  action: 'invite' | 'decline' | 'revoke' | 'request';
   guest_email?: string | null;
   card_image_id?: string | null;
   inviteId?: string | null;
   owner_email?: string | null;
   card_name?: string | null;
+  player_name?: string | null;
+  team_name?: string | null;
 };
 
 type InviteResponse = {
@@ -120,5 +122,35 @@ export async function inviteRevokeAction(
   } catch (error) {
     console.error('Failed to revoke invitation', error);
     return { error: 'Failed to revoke invitation' };
+  }
+}
+
+export async function invitationRequestAction(
+  requesterEmail: string | null | undefined,
+  targetPlayerName: string | null | undefined,
+  targetTeamName: string | null | undefined,
+) {
+  try {
+    const inviteBody: InviteAction = {
+      action: 'request',
+      guest_email: requesterEmail,
+      player_name: targetPlayerName,
+      team_name: targetTeamName,
+    };
+
+    const data = await invitePostHelper(inviteBody);
+
+    if ('error' in data) {
+      return {
+        error:
+          data.error || 'An error occurred during the invitation process.',
+      };
+    } else {
+      revalidateTag('userData');
+      return data;
+    }
+  } catch (error) {
+    console.error('Failed to send invitation', error);
+    return { error: 'Failed to send invitation' };
   }
 }

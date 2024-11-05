@@ -21,6 +21,7 @@ function convertToSeconds(timestamp: string): number {
 const accentColors = ['#FC6713', '#27B6BD', '#DA393B', '#B09E03', '#5A54A2'];
 
 interface MatchSummaryProps {
+  playerName?: string | null;
   matchData: IMatchDataExtended;
   isFuture?: boolean;
   isThisWeek?: boolean;
@@ -74,6 +75,7 @@ interface MatchSummaryProps {
 // };
 
 export default function MatchSummary({
+  playerName,
   matchData,
   isFuture,
   isThisWeek,
@@ -469,20 +471,20 @@ export default function MatchSummary({
                       {orderedHighlights?.map(
                         (
                           highlight: {
-                            clip_description: string;
+                            static_description: string;
                             duration: string;
                             start_timestamp: string;
                           },
                           index: number,
                         ) => (
                           <div
-                            key={`${highlight.clip_description}-${index}`}
+                            key={`${highlight.static_description}-${index}`}
                             className="flex flex-row sm:flex-row md:flex-col"
                           >
                             {playback_id && highlight.start_timestamp ? (
                               <>
                                 <SummaryHighlightCard
-                                  key={`${highlight.clip_description}-${index}`}
+                                  key={`${highlight.static_description}-${index}`}
                                   highlight={highlight}
                                   index={index}
                                   currentItem={currentItem}
@@ -493,6 +495,7 @@ export default function MatchSummary({
                                   accentColors={accentColors}
                                   convertToMilliseconds={convertToMilliseconds}
                                   highlightProgress={highlightProgress}
+                                  playerName={playerName ?? null}
                                 />
                               </>
                             ) : (
