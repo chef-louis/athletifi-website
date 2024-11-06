@@ -137,7 +137,7 @@ const StatsBarChart: React.FC<IRatingProps> = ({
                   offset={15}
                   style={{ fill: LAYERCOLOR }}
                 />
-                {latest_player_ratings?.map((d) => {
+                {/* {latest_player_ratings?.map((d) => {
                   return (
                     <Cell
                       key={d[xKey]}
@@ -146,6 +146,30 @@ const StatsBarChart: React.FC<IRatingProps> = ({
                           .color
                       }
                       fillOpacity={`${barProps.hover === d[xKey] || !barProps.hover ? 1 : 0.4}`}
+                    />
+                  );
+                })} */}
+                {latest_player_ratings?.map((d) => {
+                  const isHovered = barProps.hover === d[xKey];
+                  const isClicked = barProps.click === d[xKey];
+                  return (
+                    <Cell 
+                      key={d[xKey]}
+                      fill={
+                        attributeConfigs[d[xKey] as keyof IAttributeConfig]
+                          .color
+                      }
+                      fillOpacity={
+                        isClicked || (!isMobile && isHovered) ? 1 : 0.6 
+                      }
+                      onClick={() => selectBar({ target: { textContent: d[xKey] } } as ILegendMouseEvent<LegendEventType>)}
+                      onMouseEnter={() =>
+                        !isMobile &&
+                        setBarProps({ ...barProps, hover: d[xKey] })
+                      } // Only handle hover on non-mobile
+                      onMouseLeave={() =>
+                        !isMobile && setBarProps({ ...barProps, hover: null })
+                      }
                     />
                   );
                 })}

@@ -15,7 +15,7 @@
     "smsAuthenticationMessage": "Your AthletiFi verification code is {####}. Enter this code to continue. Do not share this code with anyone.",
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "[AthletiFi] Please verify your email address",
-    "emailVerificationMessage": "<div style='text-align: center; background-color: #113448'><div><img src='https://athletifi-s3.s3.us-east-2.amazonaws.com/assets/athletifi-logo.svg' style='width:104px;height:104px;margin-top:32px;margin-bottom:32px;' /></div><div style='background-color: #FFFFFF; padding: 20px; width: 50%; margin: 0 auto; margin-bottom: 64px;'><h2> Thank you for signing up with AthletiFi! </h2><div> Please use the code below to complete your sign-up. <br />Your verification code is:</div><div style='padding: 20px;'><label style='padding: 12px 20px; margin: 8px; background-color: #F1F1F1;font-weight: bold;'>{####}</label></div><div>If you have not recently signed-up with AthletiFi or did not initiate this request, you can safely ignore this email.  <br /> Your verification code expires after <b>15 minutes</b>.</div></div><div style='padding: 20px;'></div></div>",
+    "emailVerificationMessage": "<div style='text-align: center; background-color: #113448'>\\n<div>\\n<img src='https://athletifi-s3.s3.us-east-2.amazonaws.com/assets/athletifi-logo.svg' style='width:104px;height:104px;margin-top:32px;margin-bottom:32px;' />\\n</div>\\n<div style='background-color: #FFFFFF; padding: 20px; width: 50%; margin: 0 auto; margin-bottom: 64px;'>\\n<h2> Thank you for signing up with AthletiFi! </h2>\\n<div> Please use the code below to complete your sign-up. <br />Your verification code is:\\n</div>\\n<div style='padding: 20px;'>\\n<label style='padding: 12px 20px; margin: 8px; background-color: #F1F1F1;font-weight: bold;'>\\n{####}\\n</label>\\n</div>\\n<div>\\nIf you have not recently signed-up with AthletiFi or did not initiate this request, <br /> you can safely ignore this email. Your verification code expires after <b>15 minutes</b>.\\n</div>\\n</div>\\n<div style='padding: 20px;'>\\n</div>\\n</div>",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -85,6 +85,6 @@
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.athleti.fi/resolve-auth/\"],\"LogoutURLs\":[\"https://www.athleti.fi/logout/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://athleti.fi/profile/\",\"https://athleti.fi/auth/login/\",\"https://auth.athleti.fi/\",\"https://athleti.fi/\",\"http://localhost:3000/resolve-auth/\"],\"LogoutURLs\":[\"https://athleti.fi/goodbye/\",\"https://auth.athleti.fi/\",\"https://athleti.fi/\",\"https://athleti.fi/auth/logout/\",\"http://localhost:3000/profile/\",\"http://localhost:3000/logout/\"]}"
   }
 }

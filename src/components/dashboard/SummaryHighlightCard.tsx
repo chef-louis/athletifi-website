@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle, faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 
 interface Highlight {
-  clip_description: string;
+  static_description: string;
   duration: string;
   start_timestamp: string;
 }
@@ -18,6 +18,7 @@ interface SummaryHighlightCardProps {
   accentColors: string[];
   convertToMilliseconds: (timestamp: string) => number;
   highlightProgress: number;
+  playerName: string | null;
 }
 
 const SummaryHighlightCard: React.FC<SummaryHighlightCardProps> = ({
@@ -31,6 +32,7 @@ const SummaryHighlightCard: React.FC<SummaryHighlightCardProps> = ({
   accentColors,
   convertToMilliseconds,
   highlightProgress,
+  playerName,
 }) => {
   const convertToSeconds = (timestamp: string): number => {
     const [hours, minutes, seconds] = timestamp.split(':').map(Number);
@@ -58,7 +60,7 @@ const SummaryHighlightCard: React.FC<SummaryHighlightCardProps> = ({
                 <div className="flex flex-col">
                   <h3 className="text-base mb-2">{`Highlight ${String(index + 1).padStart(2, '0')}`}</h3>
                   <p className="text-base font-light text-offwhitem-px">
-                    {highlight.clip_description}
+                    {playerName} {highlight.static_description}
                   </p>
                   <p className="text-sm text-gray-500 m-px">
                     Duration: {convertToSeconds(highlight.duration)} seconds

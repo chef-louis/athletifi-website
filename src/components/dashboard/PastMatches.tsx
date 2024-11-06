@@ -67,8 +67,10 @@ const isThisWeek = (date: Date) => {
 //TODO: move filtering to dashboardStore if needed.
 export default function PastMatches({
   matchList,
+  playerName,
 }: {
   matchList: IMatchDataExtended[] | null;
+  playerName?: string | null;
 }) {
   const today = new Date();
   const pastMatches =
@@ -99,7 +101,7 @@ export default function PastMatches({
       },
     },
   };
-
+ 
   return (
     <>
       {matchList && matchList[0]?.home_club_logo ? (
@@ -119,6 +121,7 @@ export default function PastMatches({
                     className="overflow-hidden"
                   >
                     <MatchSummary
+                      // playerName={playerName}
                       matchData={match}
                       isFuture={true}
                       isThisWeek={isThisWeek(
@@ -160,7 +163,7 @@ export default function PastMatches({
                   variants={staggerVariants}
                   className="overflow-hidden"
                 >
-                  <MatchSummary matchData={match} />
+                  <MatchSummary playerName={playerName} matchData={match} />
                 </motion.div>
                 {index !== pastMatches.length - 1 && (
                   <motion.span

@@ -1,4 +1,31 @@
 {
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-athletifiwebsite-dev-b8af6-authRole",
+      "UnauthRoleArn": "arn:aws:iam::224898308309:role/amplify-athletifiwebsite-dev-b8af6-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::224898308309:role/amplify-athletifiwebsite-dev-b8af6-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-athletifiwebsite-dev-b8af6-deployment",
+      "UnauthRoleName": "amplify-athletifiwebsite-dev-b8af6-unauthRole",
+      "StackName": "amplify-athletifiwebsite-dev-b8af6",
+      "StackId": "arn:aws:cloudformation:us-east-2:224898308309:stack/amplify-athletifiwebsite-dev-b8af6/d9d40c60-fdd8-11ee-848b-0a830b0a10ff",
+      "AmplifyAppId": "ds5np5q15q36h"
+    },
+    "categories": {
+      "auth": {
+        "athletifiAuth": {
+          "facebookAppId": "1011835260562058",
+          "googleClientId": "594257084312-4uf0fqp0krn1f4vo73inv9uo4ie3pkm6.apps.googleusercontent.com"
+        },
+        "userPoolGroups": {}
+      },
+      "function": {
+        "athletifiAuthPostConfirmation": {
+          "GROUP": "athletifiGeneralUsers"
+        }
+      }
+    }
+  },
   "prod": {
     "awscloudformation": {
       "AuthRoleName": "amplify-athletifiwebsite-prod-8f2f5-authRole",

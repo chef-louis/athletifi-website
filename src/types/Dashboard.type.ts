@@ -98,7 +98,7 @@ export interface IRatingProps {
 
 export interface IBarProps {
   click: Attributes | undefined | null;
-  hover: Attributes | undefined | null;
+  hover: string | Attributes | undefined | null;
 }
 
 export interface ILineProps {
@@ -212,7 +212,7 @@ export const emptyVideoData: IVideo = {
 };
 
 export interface IHighlight {
-  clip_description: string;
+  static_description: string;
   duration: string;
   start_timestamp: string;
 }

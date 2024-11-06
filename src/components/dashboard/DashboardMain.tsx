@@ -10,8 +10,15 @@ import BackToTop from '@/components/common/BackToTop';
 import { sourceSans3 } from '@/app/utils/helpers';
 import DashboardFetchError from '@/components/dashboard/DashboardFetchError';
 import { getDashboardData } from '@/app/utils/fetchHelper';
+import { UserData } from '@/types/User.type';
 
-export default async function DashboardMain({ cardId }: { cardId: string }) {
+export default async function DashboardMain({
+  cardId,
+  userData,
+}: {
+  cardId: string;
+  userData: UserData;
+}) {
   const dashboardData = await getDashboardData(cardId);
 
   return (
@@ -41,7 +48,12 @@ export default async function DashboardMain({ cardId }: { cardId: string }) {
           <main className="w-full px-4 flex flex-col items-center bg-gradient-to-l from-cardsBackground via-[#032436]  to-[#032436] bg-opacity-95">
             <SeasonSection dashboardData={dashboardData} />
             <span className="h-px bg-partnersBorders w-full max-w-[1130px] my-8 md:my-4" />
-            <PastMatchesLayout dashboardData={dashboardData} />
+            <PastMatchesLayout
+              dashboardData={dashboardData}
+              userEmail={userData.email}
+              ownedCards={userData.owned_cards}
+              guestCards={userData.guest_cards}
+            />
           </main>
           <BackToTop />
           <Footer />
