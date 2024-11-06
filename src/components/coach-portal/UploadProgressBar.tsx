@@ -11,7 +11,6 @@ const UploadProgressBar = ({ files }: { files: FileWithPreview[] }) => {
           }
         }, 0) / files.length
       : 0;
-  console.log(percentage);
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - percentage * circumference;
 
