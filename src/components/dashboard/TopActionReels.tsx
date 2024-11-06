@@ -16,6 +16,7 @@ interface IActionReelProps {
   description: string;
   start_timestamp: string;
   datetime: string | null;
+  playerName: string | null;
 }
 
 export function ActionReel({
@@ -25,6 +26,7 @@ export function ActionReel({
   description,
   start_timestamp,
   datetime,
+  playerName,
 }: IActionReelProps) {
   ////////////open/close hightlight video
   const [isExpanded, setIsExpanded] = useState(false);
@@ -79,7 +81,7 @@ export function ActionReel({
         </div>
         <div className="ml-2 flex flex-col justify-end w-full min-w-[130px] md:max-w-[230px]">
           <p className="text-sm text-primary font-extralight font-sourceSansPro">
-            {description}
+            {playerName} {description}
           </p>
           {datetime && (
             <p className="mt-2 text-sm text-offwhite font-extralight font-sourceSansPro">
@@ -102,7 +104,7 @@ export function ActionReel({
             />
             <div className="absolute bg-cardsBackground bg-opacity-50 rounded-[5px] top-0 z-10 flex w-full justify-between items-center px-4 py-2">
               <p className="max-w-[240px] py-4  text-sm text-primary font-extralight font-sourceSansPro">
-                {description}
+                {playerName} {description}
               </p>
               <button className="text-primary" onClick={handleClose}>
                 <FontAwesomeIcon icon={faXmark} size="2xl" />
@@ -134,15 +136,16 @@ function getHighlights(
         datetime: match.datetime,
       })) || [],
   );
-  console.log(allHighlights);
 
   return allHighlights.slice(0, maxHighlights);
 }
 
 export function ActionReelList({
   matchesList,
+  playerName,
 }: {
   matchesList: IMatchDataExtended[] | null;
+  playerName: string | null | undefined;
 }) {
   ///////filter invalid highlights
   ///////render max of 4, in future randomly render for better UX
@@ -170,6 +173,7 @@ export function ActionReelList({
               description={highlight.static_description}
               start_timestamp={highlight.start_timestamp}
               datetime={highlight.datetime || null}
+              playerName={playerName ?? null}
             />
           ))}
         </div>
